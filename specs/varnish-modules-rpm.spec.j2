@@ -1,0 +1,50 @@
+Summary: Collection of Varnish Cache modules (VMODs) by Varnish Software
+Name: varnish-modules
+Version: 4.1
+Release: {{ varnish_modules_release }}
+Group: System Environment/Libraries
+Packager: Ilari Stenroth
+License: MIT
+Requires: varnish >= 4.1.0
+BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
+
+%description
+Collection of Varnish Cache 4.1 modules (VMODs) by Varnish Software
+ - vmod_cookie
+ - vmod_header
+ - vmod_saintmode
+ - vmod_softpurge
+ - vmod_tcp
+ - vmod_var
+ - vmod_vsthrottle
+ - vmod_xkey
+
+Varnish Cache 4.1.2 or newer is required.
+
+%build
+rm -fr src
+mkdir -p src
+curl -s -S -L -o src/varnish-modules.tgz {{ varnish_modules_url }}
+tar -C src --strip-components=1 -xzf src/varnish-modules.tgz
+(cd src; ./bootstrap; ./configure; make)
+
+%install
+rm -rf %{buildroot}
+(cd src; make install DESTDIR=%{buildroot} INSTALL="install -p")
+sed -i -e s/^installed=no$/installed=yes/ %{buildroot}%{_libdir}/varnish/vmods/*.la
+# Build a manifest of the RPM's directory hierarchy.
+echo "%%defattr(-, root, root)" >MANIFEST
+(cd %{buildroot}; find . -type f -or -type l | sed -e s/^.// -e /^$/d) >>MANIFEST
+
+%post
+ldconfig -n %{_libdir}
+
+%postun
+ldconfig -n %{_libdir}
+
+%clean
+rm -fr src %{buildroot} MANIFEST
+
+%files -f MANIFEST
+
+

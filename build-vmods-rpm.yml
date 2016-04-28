@@ -1,0 +1,74 @@
+---
+- hosts: all
+  remote_user: vagrant
+  vars_files:
+  - variables.yml
+  vars:
+    varnish_modules_url: "https://github.com/varnish/varnish-modules/archive/varnish-modules-{{ varnish_modules_release }}.tar.gz"
+  tasks:
+  - name: Install EPEL Yum repo
+    yum: name=epel-release state=present
+    become: yes
+    become_user: root
+  - name: Install build tools from CentOS repos
+    yum: name={{ item }} state=present
+    become: yes
+    become_user: root
+    with_items:
+    - ca-certificates
+    - curl
+    - libcurl
+    - git
+    - glib2
+    - rsync
+    - make
+    - patch
+    - bzip2
+    - xz
+    - tar
+    - autoconf
+    - automake
+    - libtool
+    - zlib-devel
+    - glibc-devel
+    - libaio-devel
+    - pcre-devel
+    - nss-devel
+    - nss-softokn-devel
+    - nss-softokn-freebl-devel
+    - nspr-devel
+    - libgcrypt-devel
+    - libgpg-error-devel
+    - GeoIP-devel
+    - rpm-build
+    - redhat-rpm-config
+    - mock
+    - scl-utils
+    - centos-release-scl-rh
+  - name: Install build tools from Devtoolset-3 repo
+    yum: name={{ item }} state=present
+    become: yes
+    become_user: root
+    with_items:
+    - devtoolset-3-binutils
+    - devtoolset-3-gcc
+    - devtoolset-3-gcc-c++
+  - name: Install Varnish Cache 4.1 YUM repo
+    yum: name=https://repo.varnish-cache.org/redhat/varnish-4.1.el7.rpm state=present
+    become: yes
+    become_user: root
+  - name: Install Varnish Cache devel libraries
+    yum: name=varnish-libs-devel state=latest
+    become: yes
+    become_user: root
+  - name: Delete recursively old rpmbuild directory
+    file: dest=rpmbuild state=absent
+  - name: Create new rpmbuild directory
+    file: dest=rpmbuild/BUILD state=directory recurse=yes
+  - name: Create new rpm SPECS directory
+    file: dest=rpmbuild/SPECS state=directory recurse=yes
+  - name: Copy RPM spec file to Vagrant box
+    template: src=specs/varnish-modules-rpm.spec.j2 dest=rpmbuild/SPECS/varnish-modules-rpm.spec
+  - name: Build RPM packages
+    shell: source /opt/rh/devtoolset-3/enable && rpmbuild -ba rpmbuild/SPECS/varnish-modules-rpm.spec
+
