@@ -45,14 +45,14 @@
     - mock
     - scl-utils
     - centos-release-scl-rh
-  - name: Install build tools from Devtoolset-3 repo
+  - name: Install build tools from Devtoolset-6 repo
     yum: name={{ item }} state=present
     become: yes
     become_user: root
     with_items:
-    - devtoolset-3-binutils
-    - devtoolset-3-gcc
-    - devtoolset-3-gcc-c++
+    - devtoolset-6-binutils
+    - devtoolset-6-gcc
+    - devtoolset-6-gcc-c++
   - name: Install Varnish Cache 4.1 YUM repo
     yum: name=https://repo.varnish-cache.org/redhat/varnish-4.1.el7.rpm state=present
     become: yes
@@ -70,5 +70,5 @@
   - name: Copy RPM spec file to Vagrant box
     template: src=specs/varnish-modules-rpm.spec.j2 dest=rpmbuild/SPECS/varnish-modules-rpm.spec
   - name: Build RPM packages
-    shell: source /opt/rh/devtoolset-3/enable && rpmbuild -ba rpmbuild/SPECS/varnish-modules-rpm.spec
+    shell: source /opt/rh/devtoolset-6/enable && rpmbuild -ba rpmbuild/SPECS/varnish-modules-rpm.spec
 
