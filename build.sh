@@ -1,6 +1,6 @@
 #!/bin/sh
 
-echo "Building VMODs for RHEL/CentOS/SL 7...."
+echo "Building VMODs for RHEL/CentOS/SL 6...."
 
 vagrant up --no-provision
 SSHARGS=`vagrant ssh-config | awk 'NF && !/^Host / {print " -o "$1"="$2}'`
