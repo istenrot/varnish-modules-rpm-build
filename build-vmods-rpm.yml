@@ -50,11 +50,11 @@
     become: yes
     become_user: root
     with_items:
-    - devtoolset-6-binutils
-    - devtoolset-6-gcc
-    - devtoolset-6-gcc-c++
+    - devtoolset-4-binutils
+    - devtoolset-4-gcc
+    - devtoolset-4-gcc-c++
   - name: Install Varnish Cache 4.1 YUM repo
-    yum: name=https://repo.varnish-cache.org/redhat/varnish-4.1.el7.rpm state=present
+    yum: name=https://repo.varnish-cache.org/redhat/varnish-4.1.el6.rpm state=present
     become: yes
     become_user: root
   - name: Install Varnish Cache devel libraries
