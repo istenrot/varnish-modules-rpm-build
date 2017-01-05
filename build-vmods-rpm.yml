@@ -70,5 +70,5 @@
   - name: Copy RPM spec file to Vagrant box
     template: src=specs/varnish-modules-rpm.spec.j2 dest=rpmbuild/SPECS/varnish-modules-rpm.spec
   - name: Build RPM packages
-    shell: source /opt/rh/devtoolset-6/enable && rpmbuild -ba rpmbuild/SPECS/varnish-modules-rpm.spec
+    shell: source /opt/rh/devtoolset-4/enable && rpmbuild -ba rpmbuild/SPECS/varnish-modules-rpm.spec
 
