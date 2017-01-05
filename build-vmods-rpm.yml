@@ -54,7 +54,7 @@
     - devtoolset-6-gcc
     - devtoolset-6-gcc-c++
   - name: Install Varnish Cache 4.1 YUM repo
-    yum: name=https://repo.varnish-cache.org/redhat/varnish-4.1.el7.rpm state=present
+    yum: name=https://repo.varnish-cache.org/redhat/varnish-4.1.{{ distribution_release }}.rpm state=present
     become: yes
     become_user: root
   - name: Install Varnish Cache devel libraries
